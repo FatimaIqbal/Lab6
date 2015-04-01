@@ -1,0 +1,203 @@
+package lab6;
+
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Scanner;
+
+
+public class FileListing {
+java.util.HashMap<String,String> hash= new java.util.HashMap<String,String>();
+java.util.HashMap<String,String> hash3= new java.util.HashMap<String,String>();
+
+//List all the files and folders from a directory
+public void listFilesAndFolders(String directoryName){
+
+	File directory = new File(directoryName);
+	//get all the files from a directory
+	File[] fList = directory.listFiles();
+	for (File file : fList){
+		System.out.println(file.getName());
+	}
+}
+
+//List all the files under a directory
+public void listFiles(String directoryName){
+	File directory = new File(directoryName);
+	//get all the files from a directory
+	File[] fList = directory.listFiles();
+	for (File file : fList){
+		if (file.isFile()){
+			System.out.println(file.getName());
+		}
+	}
+}
+
+// List all the folder under a directory
+public void listFolders(String directoryName){
+	File directory = new File(directoryName);
+	//get all the files from a directory
+	File[] fList = directory.listFiles();
+	for (File file : fList){
+		if (file.isDirectory()){
+			System.out.println(file.getName());
+		}
+	}
+}
+
+/* List all files from a directory and its subdirectories */
+
+public java.util.HashMap<String,String> listFilesAndFilesSubDirectories_1(char option,String directoryName) throws FileNotFoundException{
+	File directory = new File(directoryName);
+	//get all the files from a directory
+	File[] fList = directory.listFiles();
+	for (File file : fList){
+		if (file.isFile()){
+			System.out.println(file.getName());
+			System.out.println(file.getAbsolutePath());
+			
+			if(option=='2'){
+			String filename = file.getName();
+			String ext = (filename.lastIndexOf(".")==-1)?"":filename.substring(filename.lastIndexOf(".")+1,filename.length());
+			System.out.println(ext);
+			
+			if (ext.equals("txt")){
+				 StringBuilder fileContents = new StringBuilder((int)file.length());
+				 Scanner scanner = new Scanner(file);
+				 String lineSeparator = System.getProperty("line.separator");
+				    try {
+				        while(scanner.hasNextLine()) {        
+				            fileContents.append(scanner.nextLine() + lineSeparator);
+				        }
+				       String contents= fileContents.toString();
+				       System.out.println(contents);
+				       hash3.put(filename, contents);
+				    } finally {
+				        scanner.close();
+				    }
+				    
+				System.out.println("HELLOOOO");
+			}
+			else{ System.out.println("fail");}
+			
+			}	
+			
+			else if (option=='1'){
+			String key = file.getName();
+			String value = file.getAbsolutePath();
+			hash.put(key, value);
+		} 
+			}
+	   else if (file.isDirectory()){
+		   if(option == 2)
+			hash3=listFilesAndFilesSubDirectories_1(option,file.getAbsolutePath());
+		   else if (option == 1)
+			hash=listFilesAndFilesSubDirectories_1(option,file.getAbsolutePath());  
+		   
+		}
+	}
+	
+	return hash;
+}
+
+public java.util.HashMap<String,String> listFilesAndFilesSubDirectories_2(char option,String directoryName) throws FileNotFoundException{
+	File directory = new File(directoryName);
+	//get all the files from a directory
+	File[] fList = directory.listFiles();
+	for (File file : fList){
+		if (file.isFile()){
+			System.out.println(file.getName());
+			System.out.println(file.getAbsolutePath());
+			
+			if(option=='2'){
+			String filename = file.getName();
+			String ext = (filename.lastIndexOf(".")==-1)?"":filename.substring(filename.lastIndexOf(".")+1,filename.length());
+			System.out.println(ext);
+			
+			if (ext.equals("txt")){
+				 StringBuilder fileContents = new StringBuilder((int)file.length());
+				 Scanner scanner = new Scanner(file);
+				 String lineSeparator = System.getProperty("line.separator");
+				    try {
+				        while(scanner.hasNextLine()) {        
+				            fileContents.append(scanner.nextLine() + lineSeparator);
+				        }
+				       String contents= fileContents.toString();
+				       System.out.println(contents);
+				       hash3.put(filename, contents);
+				    } finally {
+				        scanner.close();
+				    }
+				    
+				System.out.println("HELLOOOO");
+			}
+			else{ System.out.println("fail");}
+			
+			}	
+			
+			else if (option=='1'){
+			String key = file.getName();
+			String value = file.getAbsolutePath();
+			hash.put(key, value);
+		} 
+			}
+	   else if (file.isDirectory()){
+		   if(option == 2)
+			hash3=listFilesAndFilesSubDirectories_2(option,file.getAbsolutePath());
+		   else if (option == 1)
+			hash=listFilesAndFilesSubDirectories_2(option,file.getAbsolutePath());  
+		   
+		}
+	}
+	
+	return hash3;
+}
+
+public String [] find_matches(String to_search,HashMap<String, String> hash5){
+	int size1 = hash5.size();
+	for (int i=0;i<size1;i++){
+	String key =hash5.key[i];
+	System.out.println(key);
+	}
+	return null;
+	
+	
+}
+
+public static void main (String[] args) throws FileNotFoundException{
+FileListing FileListing = new FileListing();
+//Windows directory example
+//final String directoryWindows ="C:\\Users\\fiqbal.bscs12seecs\\Desktop";
+
+Scanner user_input = new Scanner(System.in);
+System.out.println("Enter the directory you want to Search in : ");
+String directoryWindows = user_input.next();
+
+System.out.println("How do you want to search? ");
+System.out.println("1) Search files by Name");
+System.out.println("2) Search files by content (for text files only)");
+String second_input = user_input.next();
+char choice = second_input.charAt(0);
+
+java.util.HashMap<String,String> hash2= new java.util.HashMap<String,String>();
+java.util.HashMap<String,String> hash4= new java.util.HashMap<String,String>();
+if (choice=='1'){
+hash2 = FileListing.listFilesAndFilesSubDirectories_1(choice,directoryWindows);
+System.out.println(hash2);
+System.out.println("Enter the string thaat you want to look for");
+String string_to_search = user_input.next();
+String [] matches1= FileListing.find_matches(string_to_search,hash2);
+}
+
+else if (choice == '2'){
+hash4 = FileListing.listFilesAndFilesSubDirectories_2(choice,directoryWindows);
+System.out.println(hash4);
+System.out.println("Enter the string thaat you want to look for");
+String string_to_search = user_input.next();
+String [] matches1= FileListing.find_matches(string_to_search,hash2);
+}
+
+}
+
+}
